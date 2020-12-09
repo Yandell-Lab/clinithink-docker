@@ -18,7 +18,7 @@ RUN add-apt-repository -y 'deb https://dl.winehq.org/wine-builds/ubuntu/ groovy 
 RUN apt update
 RUN apt install --install-recommends -o APT::Immediate-Configure=0 -y winehq-devel
 
-# Create clinithink user
+# Create and switch to clinithink user
 RUN adduser --disabled-password --gecos '' clinithink
 RUN usermod -a -G sudo clinithink
 USER clinithink
