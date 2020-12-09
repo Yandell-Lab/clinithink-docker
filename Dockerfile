@@ -25,9 +25,9 @@ USER clinithink
 WORKDIR /home/clinithink
 
 # Create a Wine bottle without prompting to install Mono or Gecko
-RUN xvfb-run -e /dev/stderr sh -c 'WINEDLLOVERRIDES="mscoree,mshtml=" wineboot --init && wineserver -w' && rm -f /tmp/.X*-lock
+RUN xvfb-run sh -c 'WINEDLLOVERRIDES="mscoree,mshtml=" wineboot --init && wineserver -w' && rm -f /tmp/.X*-lock
 RUN wget https://dl.winehq.org/wine/wine-mono/5.1.1/wine-mono-5.1.1-x86.msi
-RUN xvfb-run -e /dev/stderr sh -c "wine msiexec /i *.msi && wineserver -w" && rm -f /tmp/.X*-lock
+RUN xvfb-run sh -c "wine msiexec /i *.msi && wineserver -w" && rm -f /tmp/.X*-lock
 RUN rm *.msi
 
 # Install Clinithink
