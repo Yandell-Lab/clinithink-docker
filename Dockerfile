@@ -21,7 +21,6 @@ RUN apt install --install-recommends -o APT::Immediate-Configure=0 -y winehq-dev
 # Create clinithink user
 RUN adduser --disabled-password --gecos '' clinithink
 RUN usermod -a -G sudo clinithink
-COPY CLiX_insight_Setup_6_800_135_1.exe /home/clinithink
 USER clinithink
 WORKDIR /home/clinithink
 
@@ -29,10 +28,13 @@ WORKDIR /home/clinithink
 RUN xvfb-run -e /dev/stderr sh -c 'WINEDLLOVERRIDES="mscoree,mshtml=" wineboot --init && wineserver -w' && rm -f /tmp/.X*-lock
 RUN wget https://dl.winehq.org/wine/wine-mono/5.1.1/wine-mono-5.1.1-x86.msi
 RUN xvfb-run -e /dev/stderr sh -c "wine msiexec /i *.msi && wineserver -w" && rm -f /tmp/.X*-lock
+RUN rm *.msi
 
 # Install Clinithink
+COPY CLiX_insight_Setup_6_800_135_1.exe /home/clinithink
 RUN xvfb-run sh -c 'wine CLiX_insight_Setup_6_800_135_1.exe /VERYSILENT && wineserver -w'
 RUN sed -i 's/launch = clix_insight.exe/launch = clix_insight.exe --conf=insight-prod.conf/' ~/.wine/drive_c/Clinithink/insight/bin/service.cfg
+RUN rm -f *.exe
 
 # Start the server
 EXPOSE 49120
