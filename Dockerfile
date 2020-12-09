@@ -1,12 +1,14 @@
 FROM library/ubuntu:20.10
 
-# Configure the machine
-RUN ln -sf /usr/share/zoneinfo/America/Denver /etc/localtime
-
 # Install system packages
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update
-RUN apt install -y gnupg2 nmap software-properties-common tzdata xvfb wget winbind
+RUN apt install -y gnupg2 nmap software-properties-common sudo tzdata xvfb wget winbind
+
+# Configure the machine
+RUN ln -sf /usr/share/zoneinfo/America/Denver /etc/localtime
+RUN cat /etc/sudoers
+RUN sed -i 's/%sudo	ALL=(ALL:ALL) ALL/%sudo	ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
 # Install Wine
 RUN dpkg --add-architecture i386
@@ -14,10 +16,11 @@ RUN wget https://dl.winehq.org/wine-builds/winehq.key
 RUN apt-key add winehq.key
 RUN add-apt-repository -y 'deb https://dl.winehq.org/wine-builds/ubuntu/ groovy main'
 RUN apt update
-RUN apt install --install-recommends -y winehq-devel
+RUN apt install --install-recommends -o APT::Immediate-Configure=0 -y winehq-devel
 
 # Create clinithink user
 RUN adduser --disabled-password --gecos '' clinithink
+RUN usermod -a -G sudo clinithink
 COPY CLiX_insight_Setup_6_800_135_1.exe /home/clinithink
 USER clinithink
 WORKDIR /home/clinithink
