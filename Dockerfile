@@ -38,4 +38,4 @@ RUN rm -f *.exe
 
 # Start the server
 EXPOSE 49120
-CMD wineboot &> /dev/null && bash
+CMD wineboot 2>&1 > /dev/null && bash
