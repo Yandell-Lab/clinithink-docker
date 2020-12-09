@@ -1,0 +1,13 @@
+[Unit]
+Description=Clinithink
+After=podman.service
+Requires=podman.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStart=/opt/clinithink-docker/run.sh
+ExecStop=/usr/bin/docker stop clinithink
+
+[Install]
+WantedBy=multi-user.target
